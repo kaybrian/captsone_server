@@ -13,9 +13,15 @@ SECRET_KEY = 'django-insecure-i&7gd5!bq!+)ltzy%cs*!bt#mbe@h9p*3p!vg5s2eyxd@hgon#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '*.onrender.com'
+]
 
+# login url 
 
+LOGIN_URL = '/users/login/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,7 +54,7 @@ ROOT_URLCONF = 'HealthData.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates' ],
+        'DIRS': [ BASE_DIR, 'templates' ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,10 +117,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles",
+    BASE_DIR, "static"
 ]
 
 # Default primary key field type
@@ -124,5 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    '*', # Allow all origins
+    'http://localhost:8000', 
+    'http://127.0.0.1:8000',
+    'https://*.onrender.com'
 ]

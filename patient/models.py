@@ -5,6 +5,7 @@ class Patient(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     sex = models.IntegerField(choices=[(1, 'Male'), (0, 'Female')])
+    is_active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

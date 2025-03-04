@@ -3,6 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Patient, HealthVital
 from .serializers import PatientSerializer, HealthVitalSerializer
+from django.http import JsonResponse
+from django.db.models import Avg
+from datetime import timedelta, date
+from django.utils import timezone
 
 class PatientList(APIView):
     def get(self, request):
@@ -215,3 +219,25 @@ class HealthVitalList(APIView):
         vitals = patient.vitals.all()
         serializer = HealthVitalSerializer(vitals, many=True)
         return Response(serializer.data)
+
+
+class HeartRate(APIView):
+    def get(self, request):
+        today = timezone.now().date() 
+        last_7_days = today - timedelta(days=6)  
+
+        heart_rates = (
+            HealthVital.objects
+            .filter(timestamp__date__range=[last_7_days, today])
+            .values("timestamp__date")  
+            .annotate(avg_heart_rate=Avg("heart_rate"))  
+            .order_by("timestamp__date")
+        )
+
+        # Convert data for JavaScript
+        data = {
+            "dates": [entry["timestamp__date"].strftime("%Y-%m-%d") for entry in heart_rates],
+            "avgHeartRates": [entry["avg_heart_rate"] for entry in heart_rates],
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
