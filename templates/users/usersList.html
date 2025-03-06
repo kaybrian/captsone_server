@@ -1,97 +1,145 @@
-{% extends '../layout/layout.html' %} 
-
-{% block content %}
-
+{% extends '../layout/layout.html' %} {% block content %}
 
 <div class="card h-100 p-0 radius-12">
-    <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-        <div class="d-flex align-items-center flex-wrap gap-3">
-            <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
-            
-            <form class="navbar-search">
-                <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
-                <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
-            </form>
-            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                <option>Risk Level</option>
-                <option>High</option>
-                <option>Low</option>
-            </select>
-        </div>
-        <a href="{% url 'addUser' %}" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2">
-            <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-            Add New Patient
-        </a>
-    </div>
-    <div class="card-body p-24">
-        <div class="table-responsive scroll-sm">
-            <table class="table bordered-table sm-table mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="form-check style-check d-flex align-items-center">
-                                    <input class="form-check-input radius-4 border input-form-dark" type="checkbox" name="checkbox" id="selectAll">
-                                </div>
-                                S.L
-                            </div>
-                        </th>
-                        <th scope="col">Date Joined </th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">sex</th>
-                        <th scope="col">Patient Id</th>
-                        <th scope="col" class="text-center">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for patient in patients %}
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="form-check style-check d-flex align-items-center">
-                                    <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox" id="SL">
-                                </div>
-                               {{ patient.id }}
-                            </div>
-                        </td>
-                        <td>{{ patient.timestamp|date }}</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="/static/images/user-list/user-list1.png" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                <div class="flex-grow-1">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ patient.name }}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ patient.age }}</span></td>
-                        <td>{{ patient.sex }}</td>
-                        <td>{{ patient.patient_id }}</td>
-                        <td class="text-center">
-                            {% if patient.is_active %}
-                            <span class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
-                                Active
-                            </span>
-                            {% else %}
-                            <span class="bg-danger-focus text-danger-600 border border-danger-main px-24 py-4 radius-4 fw-medium text-sm">
-                                Inactive
-                            </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+  <div
+    class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between"
+  >
+    <div class="d-flex align-items-center flex-wrap gap-3">
+      <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
 
-{% block script %}
+      <form class="navbar-search">
+        <input
+          type="text"
+          class="bg-base h-40-px w-auto"
+          name="search"
+          placeholder="Search"
+        />
+        <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
+      </form>
+      <select
+        class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px"
+      >
+        <option>Risk Level</option>
+        <option>High</option>
+        <option>Low</option>
+      </select>
+    </div>
+    <a
+      href="{% url 'addUser' %}"
+      class="btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2"
+    >
+      <iconify-icon
+        icon="ic:baseline-plus"
+        class="icon text-xl line-height-1"
+      ></iconify-icon>
+      Add New Patient
+    </a>
+  </div>
+  <div class="card-body p-24">
+    <div class="table-responsive scroll-sm">
+      <table class="table bordered-table sm-table mb-0">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="d-flex align-items-center gap-10">
+                <div class="form-check style-check d-flex align-items-center">
+                  <input
+                    class="form-check-input radius-4 border input-form-dark"
+                    type="checkbox"
+                    name="checkbox"
+                    id="selectAll"
+                  />
+                </div>
+                Device Id
+              </div>
+            </th>
+            <th scope="col">Date Joined</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">sex</th>
+            <th scope="col">Patient Id</th>
+            <th scope="col" class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <a href="{% url 'viewPatientProfile' patient.patient_id %}">
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-10">
+                <div class="form-check style-check d-flex align-items-center">
+                  <input
+                    class="form-check-input radius-4 border border-neutral-400"
+                    type="checkbox"
+                    name="checkbox"
+                    id="SL"
+                  />
+                </div>
+                <a href="{% url 'viewPatientProfile' patient.patient_id %}">{{ patient.id }}</a>
+                
+              </div>
+            </td>
+            <td>{{ patient.timestamp|date }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                <img
+                  src="/static/images/user-list/user.png"
+                  alt=""
+                  class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden"
+                />
+                <div class="flex-grow-1">
+                  <a href="{% url 'viewPatientProfile' patient.patient_id %}">
+                    <span class="text-md mb-0 fw-normal text-secondary-light"
+                      >{{ patient.name }}</span
+                    >
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="text-md mb-0 fw-normal text-secondary-light"
+                >{{ patient.age }}</span
+              >
+            </td>
+            <td>
+              {% if patient.sex == 1 %}
+              <span class="text-md mb-0 fw-normal text-secondary-light"
+                >Male</span
+              >
+              {% else %}
+              <span class="text-md mb-0 fw-normal text-secondary-light"
+                >Female</span
+              >
+              {% endif %}
+            </td>
+            <td>{{ patient.patient_id }}</td>
+            <td class="text-center">
+              {% if patient.is_active %}
+              <span
+                class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm"
+              >
+                Active
+              </span>
+              {% else %}
+              <span
+                class="bg-danger-focus text-danger-600 border border-danger-main px-24 py-4 radius-4 fw-medium text-sm"
+              >
+                Inactive
+              </span>
+              {% endif %}
+            </td>
+          </tr>
+            </a>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %} {% block script %}
 <script>
-    $('.remove-item-btn').on('click', function () {
-        $(this).closest('tr').addClass('d-none')
-    });
+  $(".remove-item-btn").on("click", function () {
+    $(this).closest("tr").addClass("d-none");
+  });
 </script>
 {% endblock %}

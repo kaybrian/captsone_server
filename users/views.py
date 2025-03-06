@@ -10,6 +10,25 @@ from patient.models import Patient, HealthVital
 
 @login_required()
 def addUser(request):
+    if request.method == 'POST':
+        patient_id = request.POST['patient_id']
+        name = request.POST['name']
+        age = request.POST['age']
+        sex = request.POST['sex']
+        
+        if Patient.objects.filter(patient_id=patient_id).exists():
+            return HttpResponseRedirect('/users/addUser')
+        
+        # change the sx to 1 if male and 0 if female
+        if sex.lower() == 'male':
+            sex = 1
+        else:
+            sex = 0
+        
+        patient = Patient(patient_id=patient_id, name=name, age=age, sex=sex)
+        patient.save()
+        return HttpResponseRedirect('/users/users-list')
+      
     
     context={
         "title": "Add User",
@@ -44,6 +63,43 @@ def viewProfile(request):
     context={
         "title": "View Profile",
         "subTitle": "View Profile",
+    }
+    return render(request, "users/viewProfile.html", context)
+
+
+
+@login_required()
+def viewPatientProfile(request, patient_id):
+    patient = get_object_or_404(Patient, patient_id=patient_id)
+    
+    # get the health vital of the patient
+    health_vitals = HealthVital.objects.filter(patient=patient)
+    
+    # get the average health of the patient blood_pressure, high_risk_probability
+    blood_pressure = 0
+    high_risk_probability = 0
+    
+    for vital in health_vitals:
+        blood_pressure += vital.blood_pressure
+        high_risk_probability += vital.high_risk_probability
+    
+    # prevent the divide by zero error 
+    if len(health_vitals) > 0:
+        blood_pressure = blood_pressure / len(health_vitals)
+        high_risk_probability = high_risk_probability / len(health_vitals)
+    else:
+        blood_pressure = 0
+        high_risk_probability = 0
+    
+    
+    context={
+        "title": "View Profile",
+        "subTitle": "View Profile",
+        "patient": patient,
+        "health_vitals": health_vitals,
+        "blood_pressure": blood_pressure,
+        "high_risk_probability": high_risk_probability
+        
     }
     return render(request, "users/viewProfile.html", context)
 
