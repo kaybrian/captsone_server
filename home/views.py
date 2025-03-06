@@ -3,8 +3,10 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from patient.models import HealthVital, Patient  
+from .utils import getPatientGender, getAveragePatientVitals
 
 User = get_user_model()
+
 
 
 def blankpage(request):
@@ -139,6 +141,12 @@ def index8(request):
     # Get system statistics
     total_users = User.objects.count()
     total_patients = Patient.objects.count()  # Number of patients in the system
+    
+    # get patient gender values 
+    male, female = getPatientGender()
+    
+    # Get the average patient vitals
+    avg_bp, avg_hr, avg_ecg = getAveragePatientVitals()
 
     # Get the average risk scores for each patient
     patient_risk_averages = (
@@ -155,6 +163,8 @@ def index8(request):
 
     # Assuming doctors are stored in the User model 
     total_doctors = User.objects.all().count()  
+    
+    
     context = {
         "title": "Dashboard",
         "subTitle": "Medical",
@@ -164,6 +174,11 @@ def index8(request):
         "high_risk_users": high_risk_users,
         "low_risk_users": low_risk_users,
         "total_doctors": total_doctors,
+        "male_patients": male,
+        "female_patients": female,
+        "avg_bp": avg_bp,
+        "avg_hr": avg_hr,
+        "avg_ecg": avg_ecg,
     }
     return render(request, "dashboard/index8.html", context)
 
