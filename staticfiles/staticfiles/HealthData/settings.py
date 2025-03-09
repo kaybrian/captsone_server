@@ -19,7 +19,9 @@ ALLOWED_HOSTS = [
     '*.onrender.com'
 ]
 
+# login url 
 
+LOGIN_URL = '/users/login/'
 # Application definition
 
 INSTALLED_APPS = [

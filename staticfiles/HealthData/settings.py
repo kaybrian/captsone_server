@@ -16,7 +16,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '*.onrender.com'
+    '*.onrender.com',
+    'captsone-server.onrender.com'
 ]
 
 # login url 
@@ -36,6 +37,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'home.apps.HomeConfig',
+    'users.apps.UsersConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ ROOT_URLCONF = 'HealthData.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates' ],
+        'DIRS': [ BASE_DIR, 'templates' ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
