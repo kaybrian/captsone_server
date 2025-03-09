@@ -122,12 +122,8 @@ Current Alerts: 12
 
 
 **Medical Device Integration Guide Available in `/redoc`**
-```
 
-This README provides:
-1. Clear setup instructions for both developers and medical IT staff
-2. API documentation for device integration
-3. Security considerations for healthcare data
-4. Visual representations of key dashboard features
-5. Scalability path for future enhancements
-```
+
+
+# Link to the machine learning learning repository 
+- [ML documents](https://github.com/kaybrian/capstone)
