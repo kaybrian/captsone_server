@@ -7,6 +7,10 @@ from django.http import JsonResponse
 from django.db.models import Avg
 from datetime import timedelta, date
 from django.utils import timezone
+from django.http import JsonResponse
+from django.db.models.functions import TruncMonth
+from django.db.models import Avg
+
 
 class PatientList(APIView):
     def get(self, request):
@@ -241,3 +245,23 @@ class HeartRate(APIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+    
+    
+class GetMonthyData(APIView):
+    def get(self, request):
+        # Query heart rate data grouped by month
+        heart_rate_data = (
+            HealthVital.objects
+            .annotate(month=TruncMonth('timestamp'))
+            .values('month')
+            .annotate(avg_heart_rate=Avg('heart_rate'))
+            .order_by('month')
+        )
+
+        # Format data for plotting
+        response_data = {
+            'labels': [data['month'].strftime('%b') for data in heart_rate_data], 
+            'heart_rates': [data['avg_heart_rate'] for data in heart_rate_data]
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)

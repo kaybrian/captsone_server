@@ -3,8 +3,14 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from patient.models import HealthVital, Patient  
-from .utils import getPatientGender, getAveragePatientVitals
-
+from .utils import (
+    getPatientGender, 
+    getAveragePatientVitals,    get_risk_distribution,
+    get_active_patients,
+    get_critical_alerts,
+    get_iot_device_status
+    )
+import json
 User = get_user_model()
 
 
@@ -138,17 +144,14 @@ def widgets(request):
 
 @login_required(login_url="/users/login/")
 def index8(request):
-    # Get system statistics
+    # Your existing code remains the same
     total_users = User.objects.count()
-    total_patients = Patient.objects.count()  # Number of patients in the system
+    total_patients = Patient.objects.count()
+    doctors = User.objects.all()
     
-    # get patient gender values 
     male, female = getPatientGender()
-    
-    # Get the average patient vitals
-    avg_bp, avg_hr, avg_ecg = getAveragePatientVitals()
+    avg_bp, avg_hr, avg_ecg, avg_risk = getAveragePatientVitals()
 
-    # Get the average risk scores for each patient
     patient_risk_averages = (
         HealthVital.objects.values("patient")
         .annotate(
@@ -157,17 +160,15 @@ def index8(request):
         )
     )
 
-    # Count patients based on their average risk scores
     high_risk_users = sum(1 for p in patient_risk_averages if p["avg_high_risk"] >= 0.5)
     low_risk_users = sum(1 for p in patient_risk_averages if p["avg_low_risk"] >= 0.5)
-
-    # Assuming doctors are stored in the User model 
-    total_doctors = User.objects.all().count()  
+    total_doctors = User.objects.all().count()    
     
     
     context = {
         "title": "Dashboard",
         "subTitle": "Medical",
+        'doctors': doctors,
         "user": request.user,
         "total_users": total_users,
         "total_patients": total_patients,
@@ -179,8 +180,14 @@ def index8(request):
         "avg_bp": avg_bp,
         "avg_hr": avg_hr,
         "avg_ecg": avg_ecg,
+        "avg_risk": avg_risk,
+        "risk_distribution": get_risk_distribution(),
+        "active_patients": get_active_patients(),
+        "critical_alerts": get_critical_alerts(),
+        "iot_device_status": get_iot_device_status()
     }
     return render(request, "dashboard/index8.html", context)
+
 
 
 def addNew(request):
