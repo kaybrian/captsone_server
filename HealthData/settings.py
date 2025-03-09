@@ -16,7 +16,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '*.onrender.com'
+    '*.onrender.com',
+    'captsone-server.onrender.com'
 ]
 
 # login url 
