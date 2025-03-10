@@ -18,6 +18,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '*.onrender.com',
     'captsone-server.onrender.com',
+    '*.pythonanywhere.com',
     'kaybrian99.pythonanywhere.com',
 ]
 
