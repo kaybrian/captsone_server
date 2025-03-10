@@ -17,7 +17,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '*.onrender.com',
-    'captsone-server.onrender.com'
+    'captsone-server.onrender.com',
+    'kaybrian99.pythonanywhere.com',
 ]
 
 # login url 
@@ -147,4 +148,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000', 
     'http://127.0.0.1:8000',
     'https://*.onrender.com'
+    'https://kaybrian99.pythonanywhere.com',
+    'http://kaybrian99.pythonanywhere.com',
 ]
