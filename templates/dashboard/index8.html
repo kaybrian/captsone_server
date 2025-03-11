@@ -106,35 +106,11 @@
             <div
               class="d-flex align-items-center flex-wrap gap-2 justify-content-between"
             >
-              <h6 class="mb-2 fw-bold text-lg mb-0">Earning Statistic</h6>
-              <select
-                class="form-select form-select-sm w-auto bg-base border-0 text-secondary-light"
-              >
-                <option>This Month</option>
-                <option>This Week</option>
-                <option>This Year</option>
-              </select>
+              <h6 class="mb-2 fw-bold text-lg mb-0">Average heart Rats </h6>
+              
             </div>
           </div>
           <div class="card-body p-24">
-            <ul
-              class="d-flex flex-wrap align-items-center justify-content-center my-3 gap-3"
-            >
-              <li class="d-flex align-items-center gap-2">
-                <span class="w-12-px h-8-px rounded-pill bg-primary-600"></span>
-                <span class="text-secondary-light text-sm fw-semibold">
-                  New Patient:
-                  <span class="text-primary-light fw-bold">50</span>
-                </span>
-              </li>
-              <li class="d-flex align-items-center gap-2">
-                <span class="w-12-px h-8-px rounded-pill bg-warning-600"></span>
-                <span class="text-secondary-light text-sm fw-semibold">
-                  Old Patient:
-                  <span class="text-primary-light fw-bold"> 500</span>
-                </span>
-              </li>
-            </ul>
             <div id="enrollmentChart" class="apexcharts-tooltip-style-1"></div>
           </div>
         </div>
@@ -407,6 +383,7 @@
       try {
           const response = await fetch('/api/patients/heart-rate-by-month/');  // Adjust API URL
           const data = await response.json();
+          
   
           createChartTwo('enrollmentChart', '#487FFF', '#FF9F29', data.labels, data.heart_rates);
       } catch (error) {

@@ -8,9 +8,8 @@ from django.db.models import Avg
 from datetime import timedelta, date
 from django.utils import timezone
 from django.http import JsonResponse
-from django.db.models.functions import TruncMonth
 from django.db.models import Avg
-
+from django.db.models.functions import TruncDate
 
 class PatientList(APIView):
     def get(self, request):
@@ -246,22 +245,24 @@ class HeartRate(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
     
-    
-class GetMonthyData(APIView):
+class GetDailyHeartRateData(APIView):
     def get(self, request):
-        # Query heart rate data grouped by month
-        heart_rate_data = (
+        # Query to group data by day and compute daily averages
+        daily_heart_rate_data = (
             HealthVital.objects
-            .annotate(month=TruncMonth('timestamp'))
-            .values('month')
+            .annotate(day=TruncDate('timestamp'))
+            .values('day')
             .annotate(avg_heart_rate=Avg('heart_rate'))
-            .order_by('month')
+            .order_by('day')
         )
 
-        # Format data for plotting
+        if not daily_heart_rate_data.exists():
+            return Response({"message": "No data available for the given period"}, status=status.HTTP_204_NO_CONTENT)
+
+        # Prepare response
         response_data = {
-            'labels': [data['month'].strftime('%b') for data in heart_rate_data], 
-            'heart_rates': [data['avg_heart_rate'] for data in heart_rate_data]
+            "labels": [data["day"].strftime("%Y-%m-%d") for data in daily_heart_rate_data], 
+            "heart_rates": [data["avg_heart_rate"] for data in daily_heart_rate_data],
         }
 
         return Response(response_data, status=status.HTTP_200_OK)

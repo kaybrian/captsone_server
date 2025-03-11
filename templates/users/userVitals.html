@@ -1,0 +1,765 @@
+{% extends '../layout/layout.html' %} {% block content %}
+<div class="row gy-4 mb-10">
+  <div class="col-lg-12">
+    <div class="card h-100">
+      <div class="card-body p-24">
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="pills-edit-profile"
+            role="tabpanel"
+            aria-labelledby="pills-edit-profile-tab"
+            tabindex="0"
+          >
+            <h6 class="text-md text-primary-light mb-16">Profile Image</h6>
+            <!-- Upload Image Start -->
+            <div class="mb-24 mt-16">
+              <div class="avatar-upload">
+                <div
+                  class="avatar-edit position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer"
+                ></div>
+                <div>
+                  <img
+                    src="/static/images/user-list/user.png"
+                    alt="Avatar"
+                    class="radius-8"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- Upload Image End -->
+            <div action="#">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="name"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Full Name</label
+                    >
+                    <p class="text-bg-light py-2 px-3 rounded">{{patient.name}}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="email"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Patient ID</label
+                    >
+                    <p class="text-bg-light py-2 px-3 rounded">{{patient.patient_id}}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="number"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Age</label
+                    >
+                    <p class="text-bg-light py-2 px-3 rounded">{{patient.age}}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="depart"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Gender 
+                    </label>
+                    <p class="text-bg-light py-2 px-3 rounded">
+                      {% if patient.sex == 1 %}
+                      Male 
+                      {% else %} 
+                      Female 
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="desig"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Date Joined  
+                    </label>
+                    <p class="text-bg-light py-2 px-3 rounded">
+                      {{patient.timestamp|date}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="mb-20">
+                    <label
+                      for="Language"
+                      class="form-label fw-semibold text-primary-light text-sm mb-8"
+                      >Active Status 
+                    </label>
+                    <p class="text-bg-light py-2 px-3 rounded">
+                      {{patient.is_active}}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row gy-4">
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">Blood Pressure (HgMM) </h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="defaultLineChart" class="apexcharts-tooltip-style-1"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">Heart Rate Monitor</h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="zoomAbleLineChart"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">Resting electrocardiographic Results</h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="lineDataLabel"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">High / Low Risk Results </h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="doubleLineChart"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">Average Risk Score </h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="stepLineChart"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 p-0">
+      <div class="card-header border-bottom bg-base py-16 px-24">
+        <h6 class="text-lg fw-semibold mb-0">ST depression induced by exercise </h6>
+      </div>
+      <div class="card-body p-24">
+        <div id="gradientLineChart"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %} {% block script %}
+<script>
+    // Parse the JSON data passed from Django
+    var healthVitals = {{ health_vitals|safe }}
+
+    // Extract the vitals data for plotting
+    var bloodPressureData = healthVitals[0] || [];
+    var heartRateData = healthVitals[1] || [];
+    var restEcgData = healthVitals[2] || [];
+    var oldPakData = healthVitals[3] || [];
+    var exangData = healthVitals[4] || [];
+    var riskScoreData = healthVitals[5] || [];
+    var highRiskProData = healthVitals[6] || [];
+    var lowRiskProData = healthVitals[7] || [];
+    var timestamps = healthVitals[8] || [];
+  
+        // =========================== Default Line Chart Start ===============================
+        var options = {
+          series: [{
+              name: "Blood Pressure",
+              data: bloodPressureData
+          }],
+          chart: {
+              height: 264,
+              type: 'line',
+              toolbar: {
+                  show: false
+              },
+              zoom: {
+                  enabled: true
+              },
+          },
+          dataLabels: {
+              enabled: false
+          },
+          stroke: {
+              curve: 'smooth',
+              colors: ['#FF0000'], // Specify the line color here
+              width: 4
+          },
+          markers: {
+              size: 0,
+              strokeWidth: 3,
+              hover: {
+                  size: 8
+              }
+          },
+          tooltip: {
+              enabled: true,
+              x: {
+                  show: true,
+              },
+              y: {
+                  show: false,
+              },
+              z: {
+                  show: false,
+              }
+          },
+          grid: {
+              row: {
+                  colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+              },
+              borderColor: '#D1D5DB',
+              strokeDashArray: 3,
+          },
+          yaxis: {
+              labels: {
+                formatter: function (value) {
+                  return value;
+              },
+                  style: {
+                      fontSize: "14px"
+                  }
+              },
+          },
+          xaxis: {
+              categories: timestamps,
+              tooltip: {
+                  enabled: false
+              },
+              labels: {
+                  formatter: function (value) {
+                      return value;
+                  },
+                  style: {
+                      fontSize: "14px"
+                  }
+              },
+              axisBorder: {
+                  show: false
+              },
+              
+          }
+      };
+  
+      var chart = new ApexCharts(document.querySelector("#defaultLineChart"), options);
+      chart.render();
+    // =========================== Default Line Chart End ===============================
+  
+    // =========================== Zoom able Line Chart End ===============================
+    function createChartTwo(chartId, chartColor) {
+      
+      var options = {
+        series: [
+            {
+              name: 'This Day',
+              data: heartRateData,
+            },
+        ],
+        chart: {
+            type: 'area',
+            width: '100%',
+            height: 264,
+            sparkline: {
+              enabled: false // Remove whitespace
+            },
+            toolbar: {
+                show: false
+            },
+            padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'straight',
+            width: 4,
+            colors: [chartColor],
+            lineCap: 'round'
+        },
+        grid: {
+            show: true,
+            borderColor: '#D1D5DB',
+            strokeDashArray: 3,
+            position: 'back',
+            xaxis: {
+                lines: {
+                    show: false
+                }
+            },   
+            yaxis: {
+                lines: {
+                    show: true
+                }
+            },  
+            row: {
+                colors: undefined,
+                opacity: 0.5
+            },  
+            column: {
+                colors: undefined,
+                opacity: 0.5
+            },  
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            },  
+        },
+        fill: {
+            type: 'gradient',
+            colors: [chartColor], // Set the starting color (top color) here
+            gradient: {
+                shade: 'light', // Gradient shading type
+                type: 'vertical',  // Gradient direction (vertical)
+                shadeIntensity: 0.5, // Intensity of the gradient shading
+                gradientToColors: [`${chartColor}00`], // Bottom gradient color (with transparency)
+                inverseColors: false, // Do not invert colors
+                opacityFrom: .6, // Starting opacity
+                opacityTo: 0.3,  // Ending opacity
+                stops: [0, 100],
+            },
+        },
+        // Customize the circle marker color on hover
+        markers: {
+          colors: [chartColor],
+          strokeWidth: 3,
+          size: 0,
+          hover: {
+            size: 10
+          }
+        },
+          xaxis: {
+              labels: {
+                  show: false
+              },
+              categories: timestamps,
+              tooltip: {
+                  enabled: false,
+              },
+              tooltip: {
+                  enabled: false
+              },
+              labels: {
+                  formatter: function (value) {
+                  return value;
+                  },
+                  style: {
+                  fontSize: "14px"
+                  }
+              },
+          },
+          yaxis: {
+                  labels: {
+                      formatter: function (value) {
+                      return value ;
+                      },
+                      style: {
+                      fontSize: "14px"
+                      }
+                  },
+          },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+      };
+  
+      var chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
+      chart.render();
+    }
+    createChartTwo('zoomAbleLineChart', '#487fff');
+    // =========================== Zoom able Line Chart End ===============================
+  
+    // =========================== Line Chart With Data labels Start ===============================
+      var options = {
+            series: [{
+              name: "rest Ecg Data",
+              data: restEcgData
+          }],
+          chart: {
+              height: 264,
+              type: 'line',
+              colors: '#000',
+              zoom: {
+                  enabled: false
+              },
+              toolbar: {
+                  show: false
+              },
+          },
+          colors: ['#487FFF'],  // Set the color of the series
+          dataLabels: {
+            enabled: true
+          },
+          stroke: {
+            curve: 'straight',
+            width: 4,
+            color: "#000"
+          },
+          markers: {
+              size: 0,
+              strokeWidth: 3,
+              hover: {
+                  size: 8
+              }
+          },
+          grid: {
+              show: true,
+              borderColor: '#D1D5DB',
+              strokeDashArray: 3,
+            row: {
+              colors: ['#f3f3f3', 'transparent'],
+              opacity: 0,
+            },
+          },
+          // Customize the circle marker color on hover
+          markers: {
+              colors: '#487FFF',
+              strokeWidth: 3,
+              size: 0,
+              hover: {
+                  size: 10
+              }
+          },
+          xaxis: {
+              categories: timestamps,
+              lines: {
+                  show: false
+              }
+          },
+          yaxis: {
+                  labels: {
+                      formatter: function (value) {
+                          return value ;
+                      },
+                      style: {
+                          fontSize: "14px"
+                      }
+                  },
+          },
+      };
+  
+      var chart = new ApexCharts(document.querySelector("#lineDataLabel"), options);
+      chart.render();
+    // =========================== Line Chart With Data labels End ===============================
+  
+    // =========================== Double Line Chart Start ===============================
+    function createLineChart(chartId, chartColor) {
+      var options = {
+        series: [
+            {
+              name: 'high Risk Probability ',
+              data: highRiskProData,
+            },
+            {
+              name: 'low Risk Probability',
+                  data: lowRiskProData,
+              },
+        ],
+        chart: {
+            type: 'line',
+            width: '100%',
+            height: 264,
+            sparkline: {
+              enabled: false // Remove whitespace
+            },
+            toolbar: {
+                show: false
+            },
+            padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            }
+        },
+        colors: ['#487FFF', '#FF9F29'],  // Set the color of the series
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 4,
+            colors: ["#FF9F29", chartColor],
+            lineCap: 'round',
+        },
+        grid: {
+            show: true,
+            borderColor: '#D1D5DB',
+            strokeDashArray: 3,
+            position: 'back',
+            xaxis: {
+                lines: {
+                    show: false
+                }
+            },   
+            yaxis: {
+                lines: {
+                    show: true
+                }
+            },  
+            row: {
+                colors: undefined,
+                opacity: 0.5
+            },  
+            column: {
+                colors: undefined,
+                opacity: 0.5
+            },  
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            },  
+        },
+        // Customize the circle marker color on hover
+        markers: {
+          colors: ["#FF9F29", chartColor],
+          strokeWidth: 3,
+          size: 0,
+          hover: {
+            size: 10
+          }
+        },
+          xaxis: {
+              labels: {
+                  show: false
+              },
+              categories: timestamps,
+              tooltip: {
+                  enabled: false,        
+              },
+              labels: {
+                  formatter: function (value) {
+                      return value;
+                  },
+                  style: {
+                      fontSize: "14px"
+                  }
+              },
+          },
+          yaxis: {
+                  labels: {
+                      formatter: function (value) {
+                          return "" + value + "%" ;
+                      },
+                      style: {
+                          fontSize: "14px"
+                      }
+                  },
+          },
+          tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+          },
+          legend: {
+              show: false
+          }
+      };
+  
+      var chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
+      chart.render();
+    }
+    createLineChart('doubleLineChart', '#487fff');
+    // =========================== Double Line Chart End ===============================
+  
+    
+    // =========================== Step Line Chart Start ===============================
+      var options = {
+          series: [{
+            data: riskScoreData,
+            name: "risk Score Data",
+          }],
+          chart: {
+            type: 'line',
+            height: 270,
+            toolbar: {
+                show: false
+            },
+          },
+          stroke: {
+            curve: 'stepline',
+          },
+          colors: ['#487FFF'],  // Set the color of the series
+          dataLabels: {
+            enabled: false
+          },
+          markers: {
+            hover: {
+              sizeOffset: 4
+            }
+          },
+          grid: {
+            show: true,
+            borderColor: '#D1D5DB',
+            strokeDashArray: 3,
+            position: 'back',
+          },
+          xaxis: {
+              labels: {
+                  show: false
+              },
+              categories: timestamps,
+              tooltip: {
+                  enabled: false,        
+              },
+              labels: {
+                  formatter: function (value) {
+                      return value;
+                  },
+                  style: {
+                      fontSize: "14px"
+                  }
+              },
+          },
+          yaxis: {
+                  labels: {
+                      formatter: function (value) {
+                          return "" + value + "%";
+                      },
+                      style: {
+                          fontSize: "14px"
+                      }
+                  },
+          },
+      };
+  
+      var chart = new ApexCharts(document.querySelector("#stepLineChart"), options);
+      chart.render();
+    // =========================== Step Line Chart End ===============================
+  
+      // =========================== Gradient Line Chart Start ===============================
+      var options = {
+          series: [{
+              name: "exang Data",
+              data: exangData
+          }],
+          chart: {
+              height: 264,
+              type: 'line',
+              toolbar: {
+                  show: false
+              },
+              zoom: {
+                  enabled: false
+              },
+          },
+          dataLabels: {
+              enabled: false
+          },
+          stroke: {
+              curve: 'smooth',
+              colors: ['#FF9F29'], // Specify the line color here
+              width: 4
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shade: 'dark',
+              gradientToColors: [ '#0E53F4'],
+              shadeIntensity: 1,
+              type: 'horizontal',
+              opacityFrom: 1,
+              opacityTo: 1,
+              stops: [0, 100, 100, 100]
+            },
+          },
+          markers: {
+              size: 0,
+              strokeWidth: 3,
+              hover: {
+                  size: 8
+              }
+          },
+          tooltip: {
+              enabled: true,
+              x: {
+                  show: true,
+              },
+              y: {
+                  show: false,
+              },
+              z: {
+                  show: false,
+              }
+          },
+          grid: {
+              row: {
+                  colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+              },
+              borderColor: '#D1D5DB',
+              strokeDashArray: 3,
+          },
+          yaxis: {
+              labels: {
+                  formatter: function (value) {
+                  return value ;
+                  },
+                  style: {
+                  fontSize: "14px"
+                  }
+              },
+          },
+          xaxis: {
+              categories: timestamps,
+              tooltip: {
+                  enabled: false
+              },
+              labels: {
+                  formatter: function (value) {
+                  return value;
+                  },
+                  style: {
+                      fontSize: "14px"
+                  }
+              },
+              axisBorder: {
+                  show: false
+              },
+          }
+      };
+  
+      var chart = new ApexCharts(document.querySelector("#gradientLineChart"), options);
+      chart.render();
+    // =========================== Gradient Line Chart End ===============================
+  
+
+  </script>
+{% endblock %}

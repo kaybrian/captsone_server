@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from patient.models import Patient, HealthVital
-
+from .utils import getPatientVitals
 
 
 @login_required()
@@ -59,7 +59,7 @@ def usersList(request):
 
 
 @login_required()
-def viewProfile(request):
+def viewProfile(request):        
     context={
         "title": "View Profile",
         "subTitle": "View Profile",
@@ -70,38 +70,57 @@ def viewProfile(request):
 
 @login_required()
 def viewPatientProfile(request, patient_id):
-    patient = get_object_or_404(Patient, patient_id=patient_id)
-    
-    # get the health vital of the patient
-    health_vitals = HealthVital.objects.filter(patient=patient)
-    
-    # get the average health of the patient blood_pressure, high_risk_probability
-    blood_pressure = 0
-    high_risk_probability = 0
-    
-    for vital in health_vitals:
-        blood_pressure += vital.blood_pressure
-        high_risk_probability += vital.high_risk_probability
-    
-    # prevent the divide by zero error 
-    if len(health_vitals) > 0:
-        blood_pressure = blood_pressure / len(health_vitals)
-        high_risk_probability = high_risk_probability / len(health_vitals)
+    if request.method == "POST":
+        # update the patient's details
+        patient = get_object_or_404(Patient, patient_id=patient_id)
+        patient.name = request.POST['name']
+        patient.age = request.POST['age']
+        
+        # change the sx to 1 if male and 0 if female
+        if request.POST['gender'].lower() =='male':
+            patient.sex = 1
+        else:
+            patient.sex = 0
+        
+        patient.save()
+        
+        return HttpResponseRedirect('/users/view-patient-profile/' + patient_id)
+        
     else:
+    
+        patient = get_object_or_404(Patient, patient_id=patient_id)
+        
+        # get the health vital of the patient
+        health_vitals = HealthVital.objects.filter(patient=patient)
+        
+        # get the average health of the patient blood_pressure, high_risk_probability
         blood_pressure = 0
         high_risk_probability = 0
-    
-    
-    context={
-        "title": "View Profile",
-        "subTitle": "View Profile",
-        "patient": patient,
-        "health_vitals": health_vitals,
-        "blood_pressure": blood_pressure,
-        "high_risk_probability": high_risk_probability
         
-    }
-    return render(request, "users/viewProfile.html", context)
+        for vital in health_vitals:
+            blood_pressure += vital.blood_pressure
+            high_risk_probability += vital.high_risk_probability
+        
+        # prevent the divide by zero error 
+        if len(health_vitals) > 0:
+            blood_pressure = blood_pressure / len(health_vitals)
+            high_risk_probability = high_risk_probability / len(health_vitals)
+        else:
+            blood_pressure = 0
+            high_risk_probability = 0
+        
+        
+        
+        context={
+            "title": "View Profile",
+            "subTitle": "View Profile",
+            "patient": patient,
+            "health_vitals": health_vitals,
+            "blood_pressure": blood_pressure,
+            "high_risk_probability": high_risk_probability
+            
+        }
+        return render(request, "users/viewProfile.html", context)
 
 def login_user(request):
     if request.method == 'POST':
@@ -124,3 +143,21 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('/users/login')
+
+
+
+def userVitals(request, patient_id):
+    patient = get_object_or_404(Patient, patient_id=patient_id)
+
+    # get the health vital of the patient
+    health_vitals = getPatientVitals(patient)
+
+    context={
+        "title": "User Vitals",
+        "subTitle": "View User Vitals",
+        "patient": patient,
+        "health_vitals": health_vitals,
+    }
+
+    return render(request, "users/userVitals.html", context)
+    
